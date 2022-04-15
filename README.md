@@ -10,9 +10,11 @@ gcc lex.yy.c y.tab.c
 ```
 
 ### Input
-Statement containing arithmetic expression of any length involving operators {+, -, *, /} and constants as operands assigned to a variable.
+Set of statements containing arithmetic expression of any length involving operators {+, -, *, /} and constants as operands assigned to a variable. '\\' character is used to mark end of input.
 
 example -
 ```
 v_1 = 1 + 67 * (4 / 8) * 10;
+v_2 = -5 + 7 * 3;
+\
 ```
