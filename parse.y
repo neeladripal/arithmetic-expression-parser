@@ -2,11 +2,13 @@
     #include <stdio.h>
     #include <stdlib.h>
     int yylex(void);
-    void yyerror(char *);
+    int yyerror(char *);
+
+    
 %}
 
 
-%start S
+%start P
 %union {
     float num;
     char* id;
@@ -18,8 +20,11 @@
 
 
 %%
-
-S:  ID '=' E ';'    {printf("%s = %.2f\n", $1, $3); return 0;}
+P:  L;
+L:  L S '\n'
+    |
+    ;
+S:  ID '=' E ';'    {printf("%s = %.2f\n", $1, $3); free($1);}
     ;         
 E:  E '+' T         {$$ = $1 + $3;}
     | E '-' T       {$$ = $1 - $3;}
@@ -35,9 +40,9 @@ F:  '(' E ')'       {$$ = $2;}
     ;
 %%
 
-void yyerror(char *s) {
+int yyerror(char *s) {
     fprintf(stderr, "%s\n", s);
-    exit(0);
+    return 0;
 }
 
 int main() {

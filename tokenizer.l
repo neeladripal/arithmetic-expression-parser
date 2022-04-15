@@ -7,9 +7,9 @@
 %%
 [0-9]+(\.[0-9]+)?       {yylval.num = atof(yytext); return NUMBER;}
 [a-zA-Z_][a-zA-Z0-9_]*  {yylval.id = yytext; return ID;}
-[-+\*/\(\)=;]           {return yytext[0];}
+[-+\*/\(\)=;\n]         {return yytext[0];}
 [ \t]                   ;
-\n                      {printf("\n"); return 0;}
+\\                      {printf("end\n"); return 0;}
 .                       {printf("unexcepted character\n");}
 %%
 
