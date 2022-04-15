@@ -1,8 +1,22 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
     int yylex(void);
     void yyerror(char *);
+    class node { // The abstract base class for all nodes.
+        protected :
+        virtual node () {} ;
+        public :
+        virtual void print_tree(void) = O; /* Descend ~ree, print contents.*/ 
+    };
+    class non_leaf_node: public node{
+        char operator;
+        string symbol;
+        float value;
+        node ** children;
+        
+    }
 %}
 
 
