@@ -53,3 +53,8 @@ dkms.conf
 
 # OS-specific files
 .DS_Store
+
+# Lex & Yacc Files
+lex.yy.c
+y.tab.c
+y.tab.h
