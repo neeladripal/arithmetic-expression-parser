@@ -25,10 +25,10 @@ typedef struct hashnode
 
 }hashnode;
 
-hashnode* map[30];
+hashnode* map[31];
 void initMap(){
     int x;
-    for(x=0;x<30;x++) map[x]=NULL;
+    for(x=0;x<31;x++) map[x]=NULL;
 }
 int hashFunc(char* k){
     int x;
@@ -42,6 +42,7 @@ void insert(char* symbol,float value){
     temp->key=symbol;
     temp->value=value;
     temp->next=NULL;
+    printf("%d\n",key);
     if(map[key]==NULL) map[key]=temp;
     else{
         hashnode *cur = map[key];
@@ -146,7 +147,35 @@ tree *make_number (char *nt, float n) {
     sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
     return result;
 }
-
+void printSymtab(){
+    int x;
+    for(x=0;x<31;x++){
+        // printf("Idx=%d",x);
+        if(map[x]){
+            
+            hashnode *cur=map[x];
+            while(cur){
+                printf("Symbol: %s Value:%.2f\n",cur->key,cur->value);
+                cur=cur->next;
+            }
+        }
+    }
+}
+void deleteSymtab(){
+    int x;
+    for(x=0;x<31;x++){
+        if(map[x]){
+            // printf("Idx=%d",x);
+            hashnode *cur=map[x];
+            while(cur){
+                // printf("Symbol: %s\t Value:%.2f",cur->key,cur->value);
+                hashnode *temp=cur;
+                free(temp);
+                cur=cur->next;
+            }
+        }
+    }
+}
 void deleteTree (tree *t) {
     // printf("debug: deleteTree called\n");
     if (t) {

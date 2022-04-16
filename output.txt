@@ -1,1 +1,0 @@
-[S[id.lexval=v_1][=][E.val=-1.00[E.val=7.00[T.val=7.00[F.val=7.00 num.lexval=7.00]]][+][T.val=-8.00[T.val=8.00[F.val=8.00 num.lexval=8.00]][*][F.val=-1.00[(][E.val=-1.00[T.val=-1.00[F.val=-1.00[-][F.val=1.00 num.lexval=1.00]]]][)]]]][;]]

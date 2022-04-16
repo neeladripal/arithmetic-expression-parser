@@ -54,5 +54,7 @@ int main() {
     initMap();
     yyparse();
     fclose(fptr);
+     printSymtab(); 
+     deleteSymtab();
     return 0;
 }
