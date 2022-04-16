@@ -447,9 +447,10 @@ char *yytext;
 #line 2 "tokenizer.l"
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
     #include "parse.tab.h"
-#line 452 "lex.yy.c"
 #line 453 "lex.yy.c"
+#line 454 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -666,9 +667,9 @@ YY_DECL
 		}
 
 	{
-#line 7 "tokenizer.l"
+#line 8 "tokenizer.l"
 
-#line 672 "lex.yy.c"
+#line 673 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -727,41 +728,41 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 8 "tokenizer.l"
+#line 9 "tokenizer.l"
 {yylval.num = atof(yytext); return NUMBER;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 9 "tokenizer.l"
-{yylval.id = strdup(yytext); return ID;}
+#line 10 "tokenizer.l"
+{ yylval.id=strdup(yytext); return ID;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 10 "tokenizer.l"
+#line 11 "tokenizer.l"
 {return yytext[0];}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 11 "tokenizer.l"
+#line 12 "tokenizer.l"
 ;
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 12 "tokenizer.l"
+#line 13 "tokenizer.l"
 {printf("\n"); return 0;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 13 "tokenizer.l"
+#line 14 "tokenizer.l"
 {printf("unexcepted character\n");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 14 "tokenizer.l"
+#line 15 "tokenizer.l"
 ECHO;
 	YY_BREAK
-#line 765 "lex.yy.c"
+#line 766 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1766,7 +1767,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 14 "tokenizer.l"
+#line 15 "tokenizer.l"
 
 
 int yywrap() {
