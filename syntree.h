@@ -7,11 +7,10 @@ enum treetype {stmt_node, unop_node, binop_node, number_node};
 typedef struct tree {
     enum treetype nodetype;
     union {
-        struct {struct tree *expr;} stmt;
+        struct {char *id; struct tree *expr;} stmt;
         struct {struct tree *child; char op;} un_op;
         struct {struct tree *left, *right; char op;} bin_op;
-        // float num_lexeme;
-        // char id_lexeme[100];
+        float num_lexeme;
     } body;
     float val;
     char code[1024];
@@ -28,7 +27,7 @@ typedef struct tree {
 // } symtab;
 
 tree *make_stmt (char *nt, char *id, tree *e) {
-    printf("debug: make_stmt called\n");
+    // printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
     result->body.stmt.expr= e;
@@ -37,7 +36,7 @@ tree *make_stmt (char *nt, char *id, tree *e) {
 }
 
 tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
-    printf("debug: make_binop called\n");
+    // printf("debug: make_binop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= binop_node;
     result->body.bin_op.left= l;
@@ -58,7 +57,7 @@ tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
 }
 
 tree *make_unop (char *nt, char o, tree *c) {
-    printf("debug: make_unop called\n");
+    // printf("debug: make_unop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= unop_node;
     result->body.un_op.op = o;
@@ -78,16 +77,16 @@ tree *make_unop (char *nt, char o, tree *c) {
 }
 
 tree *make_number (char *nt, float n) {
-    printf("debug: make_number called\n");
+    // printf("debug: make_number called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= number_node;
-    result->val = n;
+    result->val = result->body.num_lexeme = n;
     sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
     return result;
 }
 
 void deleteTree (tree *t) {
-    printf("debug: deleteTree called\n");
+    // printf("debug: deleteTree called\n");
     if (t) {
         switch (t->nodetype) {
             case stmt_node:
