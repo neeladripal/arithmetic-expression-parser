@@ -58,7 +58,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 63 "parse.y"
+#line 60 "parse.y"
 
     float num;
     char* id;

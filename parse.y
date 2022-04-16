@@ -29,14 +29,11 @@ static tree *make_operator (tree *l, char o, tree *r) {
    return result;
 }
  static tree *make_variable (char* v) {
-     printf("yy");
+    //  printf("yy\n");
    tree *result= (tree*) malloc (sizeof(tree));
    if(!result) {printf("Malloc error\n"); return NULL;}
    result->nodetype= variable_node;
-   
-   strcpy(result->body.id,v);
-//    printf("zz");
-//    result->body.a_variable= v;
+   result->body.id=v;
    return result;
  }
  static void printtree (tree *t, int level) {
@@ -73,8 +70,12 @@ static tree *make_operator (tree *l, char o, tree *r) {
 
 %%
 
-S:  ID '=' E ';'    {printf("%s\n",$1); 
-            tree * temp=make_variable($1);
+S:  ID '=' E ';'    { 
+
+            printf("dd\n");
+            char *id1=strdup($1);
+            // strcpy(id1,$1);
+            tree * temp=make_variable(id1);
 
             $$ = make_operator(temp,'=',$3);  ; printtree($$,1) ;    free($1); return 0;}
     ;         

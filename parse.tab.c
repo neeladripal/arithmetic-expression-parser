@@ -97,15 +97,12 @@ static tree *make_operator (tree *l, char o, tree *r) {
    result->body.num= n;
    return result;
 }
- tree *make_variable (char* v) {
-     printf("yy");
+ static tree *make_variable (char* v) {
+    //  printf("yy\n");
    tree *result= (tree*) malloc (sizeof(tree));
    if(!result) {printf("Malloc error\n"); return NULL;}
    result->nodetype= variable_node;
-   
-   strcpy(result->body.id,v);
-   printf("zz");
-//    result->body.a_variable= v;
+   result->body.id=v;
    return result;
  }
  static void printtree (tree *t, int level) {
@@ -126,7 +123,7 @@ static tree *make_operator (tree *l, char o, tree *r) {
      }
  }
 
-#line 130 "parse.tab.c"
+#line 127 "parse.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -183,13 +180,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 63 "parse.y"
+#line 60 "parse.y"
 
     float num;
     char* id;
     struct tree* treenode;
 
-#line 193 "parse.tab.c"
+#line 190 "parse.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -564,8 +561,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    76,    76,    81,    82,    83,    85,    86,    87,    89,
-      91
+       0,    73,    73,    82,    83,    84,    86,    87,    88,    90,
+      92
 };
 #endif
 
@@ -1361,64 +1358,68 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 76 "parse.y"
-                    {printf("%s\n",(yyvsp[-3].id)); 
-            tree * temp=make_variable((yyvsp[-3].id));
+#line 73 "parse.y"
+                    { 
+
+            printf("dd\n");
+            char *id1=strdup((yyvsp[-3].id));
+            // strcpy(id1,$1);
+            tree * temp=make_variable(id1);
 
             (yyval.treenode) = make_operator(temp,'=',(yyvsp[-1].treenode));  ; printtree((yyval.treenode),1) ;    free((yyvsp[-3].id)); return 0;}
-#line 1370 "parse.tab.c"
+#line 1371 "parse.tab.c"
     break;
 
   case 3:
-#line 81 "parse.y"
+#line 82 "parse.y"
                     {(yyval.treenode) = make_operator((yyvsp[-2].treenode),'+',(yyvsp[0].treenode));}
-#line 1376 "parse.tab.c"
+#line 1377 "parse.tab.c"
     break;
 
   case 4:
-#line 82 "parse.y"
+#line 83 "parse.y"
                     {(yyval.treenode) = make_operator((yyvsp[-2].treenode),'-',(yyvsp[0].treenode));}
-#line 1382 "parse.tab.c"
+#line 1383 "parse.tab.c"
     break;
 
   case 5:
-#line 83 "parse.y"
+#line 84 "parse.y"
                     {(yyval.treenode) = (yyvsp[0].treenode);}
-#line 1388 "parse.tab.c"
+#line 1389 "parse.tab.c"
     break;
 
   case 6:
-#line 85 "parse.y"
+#line 86 "parse.y"
                     {(yyval.treenode) = make_operator((yyvsp[-2].treenode),'*',(yyvsp[0].treenode));}
-#line 1394 "parse.tab.c"
+#line 1395 "parse.tab.c"
     break;
 
   case 7:
-#line 86 "parse.y"
+#line 87 "parse.y"
                     {(yyval.treenode) = make_operator((yyvsp[-2].treenode),'/',(yyvsp[0].treenode));}
-#line 1400 "parse.tab.c"
+#line 1401 "parse.tab.c"
     break;
 
   case 8:
-#line 87 "parse.y"
+#line 88 "parse.y"
                     {(yyval.treenode) = (yyvsp[0].treenode);}
-#line 1406 "parse.tab.c"
+#line 1407 "parse.tab.c"
     break;
 
   case 9:
-#line 89 "parse.y"
+#line 90 "parse.y"
                     {(yyval.treenode) = (yyvsp[-1].treenode);}
-#line 1412 "parse.tab.c"
+#line 1413 "parse.tab.c"
     break;
 
   case 10:
-#line 91 "parse.y"
+#line 92 "parse.y"
                     {(yyval.treenode) = make_number((yyvsp[0].num));}
-#line 1418 "parse.tab.c"
+#line 1419 "parse.tab.c"
     break;
 
 
-#line 1422 "parse.tab.c"
+#line 1423 "parse.tab.c"
 
       default: break;
     }
@@ -1650,7 +1651,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 93 "parse.y"
+#line 94 "parse.y"
 
 
 void yyerror(char *s) {
