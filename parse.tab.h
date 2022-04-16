@@ -38,7 +38,7 @@
 # define YY_YY_PARSE_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -58,11 +58,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 60 "parse.y"
+#line 13 "parse.y"
 
     float num;
-    char* id;
-    struct tree* treenode;
+    char *id;
+    struct tree *s_tree;
 
 #line 68 "parse.tab.h"
 
