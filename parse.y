@@ -12,7 +12,7 @@
 %start L
 %union {
     float num;
-    char* id;
+    char *id;
     struct tree *s_tree;
 }
 %token <num> NUMBER

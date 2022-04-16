@@ -10,11 +10,11 @@ typedef struct tree {
         struct {struct tree *expr;} stmt;
         struct {struct tree *child; char op;} un_op;
         struct {struct tree *left, *right; char op;} bin_op;
-        float num_lexeme;
-        char id_lexeme[100];
+        // float num_lexeme;
+        // char id_lexeme[100];
     } body;
     float val;
-    char code[100];
+    char code[1024];
 } tree;
 
 // typedef struct {
@@ -28,6 +28,7 @@ typedef struct tree {
 // } symtab;
 
 tree *make_stmt (char *nt, char *id, tree *e) {
+    printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
     result->body.stmt.expr= e;
@@ -36,6 +37,7 @@ tree *make_stmt (char *nt, char *id, tree *e) {
 }
 
 tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
+    printf("debug: make_binop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= binop_node;
     result->body.bin_op.left= l;
@@ -56,25 +58,27 @@ tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
 }
 
 tree *make_unop (char *nt, char o, tree *c) {
+    printf("debug: make_unop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= unop_node;
-    result->body.bin_op.op= o;
-    result->body.bin_op.right= c;
+    result->body.un_op.op = o;
+    result->body.un_op.child = c;
     if (o == '-') {
         result->val = -(c->val);
-        sprintf(result->code, "[%s.val=%2f[%c][%s]]", nt, result->val, o, c->code);
+        sprintf(result->code, "[%s.val=%.2f[%c][%s]]", nt, result->val, o, c->code);
     }
     else {
         result->val = c->val;
         if (o == '.')
-            sprintf(result->code, "[%s.val=%2f[%s]]", nt, result->val, c->code);
+            sprintf(result->code, "[%s.val=%.2f[%s]]", nt, result->val, c->code);
         else
-            sprintf(result->code, "[%s.val=%2f[(][%s][)]]", nt, result->val, c->code);
+            sprintf(result->code, "[%s.val=%.2f[(][%s][)]]", nt, result->val, c->code);
     }
     return result;
 }
 
 tree *make_number (char *nt, float n) {
+    printf("debug: make_number called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= number_node;
     result->val = n;
@@ -83,6 +87,7 @@ tree *make_number (char *nt, float n) {
 }
 
 void deleteTree (tree *t) {
+    printf("debug: deleteTree called\n");
     if (t) {
         switch (t->nodetype) {
             case stmt_node:
