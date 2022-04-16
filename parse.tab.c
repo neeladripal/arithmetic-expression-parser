@@ -1321,7 +1321,7 @@ yyreduce:
 
   case 4:
 #line 27 "parse.y"
-                    {(yyval.s_tree) = make_stmt("S", (yyvsp[-3].id), (yyvsp[-1].s_tree)); free((yyvsp[-3].id)); fprintf(fptr, "%s\n", (yyval.s_tree)->code);}
+                    {(yyval.s_tree) = make_stmt("S", (yyvsp[-3].id), (yyvsp[-1].s_tree));generate3ADC((yyval.s_tree)); free((yyvsp[-3].id)); fprintf(fptr, "%s\n", (yyval.s_tree)->code);}
 #line 1326 "parse.tab.c"
     break;
 
@@ -1627,8 +1627,10 @@ int main() {
         exit(1);             
     }
     initMap();
+    remove("threeAddressCode.txt");
     yyparse();
     fclose(fptr);
+    
      printSymtab(); 
      deleteSymtab();
     return 0;

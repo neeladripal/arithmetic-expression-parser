@@ -24,7 +24,7 @@
 L:  L S '\n'        {deleteTree($2);}
     |
     ;
-S:  ID '=' E ';'    {$$ = make_stmt("S", $1, $3); free($1); fprintf(fptr, "%s\n", $$->code);}
+S:  ID '=' E ';'    {$$ = make_stmt("S", $1, $3);generate3ADC($$); free($1); fprintf(fptr, "%s\n", $$->code);}
     ;         
 E:  E '+' T         {$$ = make_binop("E", $1, '+', $3, &flag);}
     | E '-' T       {$$ = make_binop("E", $1, '-', $3, &flag);}
@@ -52,8 +52,10 @@ int main() {
         exit(1);             
     }
     initMap();
+    remove("threeAddressCode.txt");
     yyparse();
     fclose(fptr);
+    
      printSymtab(); 
      deleteSymtab();
     return 0;

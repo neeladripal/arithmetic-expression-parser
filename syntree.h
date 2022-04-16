@@ -42,7 +42,7 @@ void insert(char* symbol,float value){
     temp->key=symbol;
     temp->value=value;
     temp->next=NULL;
-    printf("%d\n",key);
+    // printf("%d\n",key);
     if(map[key]==NULL) map[key]=temp;
     else{
         hashnode *cur = map[key];
@@ -71,14 +71,69 @@ float symtab[100];
 //     struct {int count; float arr[100];} temp;
 //     struct {int count; id_val arr[100];} id;
 // } symtab;
+void generate3ADC(tree *e){
+    if(e->nodetype==number_node){
+        FILE *f=fopen("threeAddressCode.txt","a");
+        fprintf(f,"t%d=%.2f\n",tcounter,e->body.num_lexeme);
+    e->idx=tcounter;
+    symtab[tcounter]=e->val;
+    tcounter++;
+    fclose(f);
+    }
+    else if(e->nodetype==unop_node){
+        char o=    e->body.un_op.op ;
+        tree *c= e->body.un_op.child;
+        generate3ADC(c);
+        if(o=='-'){
+            FILE *f=fopen("threeAddressCode.txt","a");
+             fprintf(f,"t%d=-t%d\n",tcounter,c->idx);
+            e->idx=tcounter;
+            symtab[tcounter]=e->val;
+            tcounter++;
+            fclose(f);
+        }
+        else{
+            e->idx=c->idx;
+        }
+    }
+    else if(e->nodetype==binop_node){
+        char o=    e->body.bin_op.op ;
+        tree *l= e->body.bin_op.left;
+        tree *r= e->body.bin_op.right;
+        generate3ADC(l);
+        generate3ADC(r);
+        
+            FILE *f=fopen("threeAddressCode.txt","a");
+             fprintf(f,"t%d=t%d %c t%d\n",tcounter,l->idx,o,r->idx);
+            e->idx=tcounter;
+            symtab[tcounter]=e->val;
+            tcounter++;
+            fclose(f);
+        
 
+    }
+    else if(e->nodetype==stmt_node){
+        char *id=e->body.stmt.id;
+        tree *c=e->body.stmt.expr;
+        insert(id,e->val);
+        generate3ADC(c);
+        FILE *f=fopen("threeAddressCode.txt","a");
+             fprintf(f,"%s=t%d\n",id,c->idx);
+            // e->idx=tcounter;
+            symtab[tcounter]=c->val;
+            // tcounter++;
+        fclose(f);
+    }
+
+}
 tree *make_stmt (char *nt, char *id, tree *e) {
     // printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
     result->body.stmt.expr= e;
-    insert(id,e->val);
-    printf("%s=t%d\n",id,e->idx);
+    result->body.stmt.id=id;
+    // insert(id,e->val);
+    // printf("%s=t%d\n",id,e->idx);
     sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
     return result;
 }
@@ -101,11 +156,11 @@ tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
             result->val = l->val / r->val; break;
     }
 
-    printf("t%d=t%d %c t%d\n",tcounter,l->idx,o,r->idx);
-    result->idx=tcounter;
+    // printf("t%d=t%d %c t%d\n",tcounter,l->idx,o,r->idx);
+    // result->idx=tcounter;
 
-    symtab[tcounter]=result->val;
-    tcounter++;
+    // symtab[tcounter]=result->val;
+    // tcounter++;
     sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
     return result;
 }
@@ -118,15 +173,15 @@ tree *make_unop (char *nt, char o, tree *c) {
     result->body.un_op.child = c;
     if (o == '-') {
         result->val = -(c->val);
-            printf("t%d=-t%d\n",tcounter,c->idx);
-            result->idx=tcounter;
-            symtab[tcounter]=result->val;
-            tcounter++;
+            // printf("t%d=-t%d\n",tcounter,c->idx);
+            // result->idx=tcounter;
+            // symtab[tcounter]=result->val;
+            // tcounter++;
         sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
     }
     else {
         result->val = c->val;
-        result->idx=c->idx;
+        // result->idx=c->idx;
         if (o == '.')
             sprintf(result->code, "[%s.val=%.2f%s]", nt, result->val, c->code);
         else
@@ -140,10 +195,10 @@ tree *make_number (char *nt, float n) {
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= number_node;
     result->val = result->body.num_lexeme = n;
-    printf("t%d=%.2f\n",tcounter,result->body.num_lexeme);
-    result->idx=tcounter;
-    symtab[tcounter]=result->val;
-    tcounter++;
+    // printf("t%d=%.2f\n",tcounter,result->body.num_lexeme);
+    // result->idx=tcounter;
+    // symtab[tcounter]=result->val;
+    // tcounter++;
     sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
     return result;
 }

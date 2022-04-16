@@ -1,0 +1,3 @@
+[S[id.lexval=a][=][E.val=4.00[E.val=13.00[E.val=9.00[T.val=9.00[F.val=9.00 num.lexval=9.00]]][+][T.val=4.00[F.val=4.00 num.lexval=4.00]]][-][T.val=9.00[F.val=9.00 num.lexval=9.00]]][;]]
+[S[id.lexval=b1][=][E.val=4.00[E.val=8.00[T.val=8.00[F.val=8.00 num.lexval=8.00]]][-][T.val=4.00[F.val=4.00 num.lexval=4.00]]][;]]
+[S[id.lexval=tp][=][E.val=-2.00[E.val=7.00[T.val=7.00[F.val=7.00 num.lexval=7.00]]][-][T.val=9.00[F.val=9.00 num.lexval=9.00]]][;]]
