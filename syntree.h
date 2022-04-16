@@ -3,7 +3,7 @@
 #include <string.h>
 #include "symtab.h"
 
-FILE *syntreefptr;
+FILE *syntreefptr, *tacfptr;
 
 enum treetype {stmt_node, unop_node, binop_node, number_node};
 
@@ -28,6 +28,10 @@ tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
     add_id(s, id, e->val);
     result->body.stmt.expr= e;
     sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
+    if (e->temp_var_idx == -1)
+        fprintf(tacfptr, "%s = %.2f\n", id, e->val);
+    else
+        fprintf(tacfptr, "%s = t%d\n", id, e->temp_var_idx);
     return result;
 }
 
@@ -50,6 +54,15 @@ tree *make_binop (symtab *s, char *nt, tree *l, char o, tree *r, int *flag) {
     }
     result->temp_var_idx = add_temp(s, result->val);
     sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
+    int lti = l->temp_var_idx, rti = r->temp_var_idx;
+    if (lti != -1 && rti != -1)
+        fprintf(tacfptr, "t%d = t%d %c t%d\n", result->temp_var_idx, lti, o, rti);
+    else if (lti != -1)
+        fprintf(tacfptr, "t%d = t%d %c %.2f\n", result->temp_var_idx, lti, o, r->val);
+    else if (rti != -1)
+        fprintf(tacfptr, "t%d = %.2f %c t%d\n", result->temp_var_idx, l->val, o, rti);
+    else
+        fprintf(tacfptr, "t%d = %.2f %c %.2f\n", result->temp_var_idx, l->val, o, r->val);
     return result;
 }
 
@@ -63,6 +76,7 @@ tree *make_unop (symtab *s, char *nt, char o, tree *c) {
         result->val = -(c->val);
         result->temp_var_idx = add_temp(s, result->val);
         sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
+        fprintf(tacfptr, "t%d = %c %.2f\n", result->temp_var_idx, o, c->val);
     }
     else {
         result->val = c->val;

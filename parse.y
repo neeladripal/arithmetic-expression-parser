@@ -58,10 +58,15 @@ int main() {
         printf("Error writing syntax tree!");   
         exit(1);             
     }
-    
+    tacfptr = fopen ("tac.txt", "w");
+    if(tacfptr == NULL) {
+        printf("Error writing three address code!");   
+        exit(1);             
+    }
     yyparse();
     delete_idStore(&st);
     fclose(symtabfptr);
     fclose(syntreefptr);
+    fclose(tacfptr);
     return 0;
 }
