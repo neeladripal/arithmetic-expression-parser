@@ -1,2 +1,2 @@
-[S[id.lexval=v_1][=][E.val=336.00[E.val=1.00[T.val=1.00[F num.lexval=1.00]]][+][T.val=335.00[T.val=33.50[T.val=67.00[F num.lexval=67.00]][*][F.val=0.50[(][E.val=0.50[T.val=0.50[T.val=4.00[F num.lexval=4.00]][/][F num.lexval=8.00]]][)]]][*][F num.lexval=10.00]]][;]]
-[S[id.lexval=v_2][=][E.val=16.00[E.val=-5.00[T.val=-5.00[F.val=-5.00[-][F num.lexval=5.00]]]][+][T.val=21.00[T.val=7.00[F num.lexval=7.00]][*][F num.lexval=3.00]]][;]]
+[S[id.lexval=v_1][=][E.val=336.00[E.val=1.00[T.val=1.00[F.val=1.00 num.lexval=1.00]]][+][T.val=335.00[T.val=33.50[T.val=67.00[F.val=67.00 num.lexval=67.00]][*][F.val=0.50[(][E.val=0.50[T.val=0.50[T.val=4.00[F.val=4.00 num.lexval=4.00]][/][F.val=8.00 num.lexval=8.00]]][)]]][*][F.val=10.00 num.lexval=10.00]]][;]]
+[S[id.lexval=v_2][=][E.val=16.00[E.val=-5.00[T.val=-5.00[F.val=-5.00[-][F.val=5.00 num.lexval=5.00]]]][+][T.val=21.00[T.val=7.00[F.val=7.00 num.lexval=7.00]][*][F.val=3.00 num.lexval=3.00]]][;]]

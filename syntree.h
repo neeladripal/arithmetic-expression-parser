@@ -82,7 +82,7 @@ tree *make_number (char *nt, float n) {
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= number_node;
     result->val = n;
-    sprintf(result->code, "[%s num.lexval=%.2f]", nt, n);
+    sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
     return result;
 }
 
