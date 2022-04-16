@@ -32,7 +32,7 @@ tree *make_stmt (char *nt, char *id, tree *e) {
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
     result->body.stmt.expr= e;
-    sprintf(result->code, "[%s[id.lexval=%s][=][%s][;]]", nt, id, e->code);
+    sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
     return result;
 }
 
@@ -53,7 +53,7 @@ tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
         else
             result->val = l->val / r->val; break;
     }
-    sprintf(result->code, "[%s.val=%.2f[%s][%c][%s]]", nt, result->val, l->code, o, r->code);
+    sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
     return result;
 }
 
@@ -65,14 +65,14 @@ tree *make_unop (char *nt, char o, tree *c) {
     result->body.un_op.child = c;
     if (o == '-') {
         result->val = -(c->val);
-        sprintf(result->code, "[%s.val=%.2f[%c][%s]]", nt, result->val, o, c->code);
+        sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
     }
     else {
         result->val = c->val;
         if (o == '.')
-            sprintf(result->code, "[%s.val=%.2f[%s]]", nt, result->val, c->code);
+            sprintf(result->code, "[%s.val=%.2f%s]", nt, result->val, c->code);
         else
-            sprintf(result->code, "[%s.val=%.2f[(][%s][)]]", nt, result->val, c->code);
+            sprintf(result->code, "[%s.val=%.2f[(]%s[)]]", nt, result->val, c->code);
     }
     return result;
 }
