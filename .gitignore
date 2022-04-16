@@ -58,3 +58,6 @@ dkms.conf
 lex.yy.c
 y.tab.c
 y.tab.h
+
+# Intermediate & Resultant text files
+*.txt
