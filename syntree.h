@@ -20,6 +20,13 @@ typedef struct tree {
     int temp_var_idx;
 } tree;
 
+void tac_stmt (char *id, tree *e) {
+    if (e->temp_var_idx == -1)
+        fprintf(tacfptr, "%s = %.2f\n", id, e->val);
+    else
+        fprintf(tacfptr, "%s = t%d\n", id, e->temp_var_idx);
+}
+
 tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
     // printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
@@ -28,11 +35,24 @@ tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
     add_id(s, id, e->val);
     result->body.stmt.expr= e;
     sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
-    if (e->temp_var_idx == -1)
-        fprintf(tacfptr, "%s = %.2f\n", id, e->val);
-    else
-        fprintf(tacfptr, "%s = t%d\n", id, e->temp_var_idx);
+    tac_stmt(id, e);
     return result;
+}
+
+void tac_binop (tree *result, char o, tree *l, tree *r) {
+    int lti = l->temp_var_idx, rti = r->temp_var_idx;
+    if (lti != -1 && rti != -1)
+        fprintf(tacfptr, "t%d = t%d %c t%d\n", result->temp_var_idx, lti, o, rti);
+    else if (lti != -1)
+        fprintf(tacfptr, "t%d = t%d %c %.2f\n", result->temp_var_idx, lti, o, r->val);
+    else if (rti != -1)
+        fprintf(tacfptr, "t%d = %.2f %c t%d\n", result->temp_var_idx, l->val, o, rti);
+    else
+        fprintf(tacfptr, "t%d = %.2f %c %.2f\n", result->temp_var_idx, l->val, o, r->val);
+}
+
+void tac_unop (tree *result, char o, tree *c) {
+    fprintf(tacfptr, "t%d = %c %.2f\n", result->temp_var_idx, o, c->val);
 }
 
 tree *make_binop (symtab *s, char *nt, tree *l, char o, tree *r, int *flag) {
@@ -54,15 +74,7 @@ tree *make_binop (symtab *s, char *nt, tree *l, char o, tree *r, int *flag) {
     }
     result->temp_var_idx = add_temp(s, result->val);
     sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
-    int lti = l->temp_var_idx, rti = r->temp_var_idx;
-    if (lti != -1 && rti != -1)
-        fprintf(tacfptr, "t%d = t%d %c t%d\n", result->temp_var_idx, lti, o, rti);
-    else if (lti != -1)
-        fprintf(tacfptr, "t%d = t%d %c %.2f\n", result->temp_var_idx, lti, o, r->val);
-    else if (rti != -1)
-        fprintf(tacfptr, "t%d = %.2f %c t%d\n", result->temp_var_idx, l->val, o, rti);
-    else
-        fprintf(tacfptr, "t%d = %.2f %c %.2f\n", result->temp_var_idx, l->val, o, r->val);
+    tac_binop(result, o, l, r);
     return result;
 }
 
@@ -76,7 +88,7 @@ tree *make_unop (symtab *s, char *nt, char o, tree *c) {
         result->val = -(c->val);
         result->temp_var_idx = add_temp(s, result->val);
         sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
-        fprintf(tacfptr, "t%d = %c %.2f\n", result->temp_var_idx, o, c->val);
+        tac_unop(result, o, c);
     }
     else {
         result->val = c->val;
