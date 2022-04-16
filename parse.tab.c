@@ -97,7 +97,7 @@ static tree *make_operator (tree *l, char o, tree *r) {
    result->body.num= n;
    return result;
 }
- static tree *make_variable (char* v) {
+ tree *make_variable (char* v) {
      printf("yy");
    tree *result= (tree*) malloc (sizeof(tree));
    if(!result) {printf("Malloc error\n"); return NULL;}

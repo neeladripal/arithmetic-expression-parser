@@ -35,7 +35,7 @@ static tree *make_operator (tree *l, char o, tree *r) {
    result->nodetype= variable_node;
    
    strcpy(result->body.id,v);
-   printf("zz");
+//    printf("zz");
 //    result->body.a_variable= v;
    return result;
  }
