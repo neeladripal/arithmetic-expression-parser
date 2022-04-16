@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "symtab.h"
+
+FILE *syntreefptr;
 
 enum treetype {stmt_node, unop_node, binop_node, number_node};
 
@@ -14,28 +17,21 @@ typedef struct tree {
     } body;
     float val;
     char code[1024];
+    int temp_var_idx;
 } tree;
 
-// typedef struct {
-//     char name[100];
-//     float val;
-// } id_val;
-
-// typedef struct {
-//     struct {int count; float arr[100];} temp;
-//     struct {int count; id_val arr[100];} id;
-// } symtab;
-
-tree *make_stmt (char *nt, char *id, tree *e) {
+tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
     // printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
+    result->body.stmt.id = id;
+    add_id(s, id, e->val);
     result->body.stmt.expr= e;
     sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
     return result;
 }
 
-tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
+tree *make_binop (symtab *s, char *nt, tree *l, char o, tree *r, int *flag) {
     // printf("debug: make_binop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= binop_node;
@@ -52,11 +48,12 @@ tree *make_binop (char *nt, tree *l, char o, tree *r, int *flag) {
         else
             result->val = l->val / r->val; break;
     }
+    result->temp_var_idx = add_temp(s, result->val);
     sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
     return result;
 }
 
-tree *make_unop (char *nt, char o, tree *c) {
+tree *make_unop (symtab *s, char *nt, char o, tree *c) {
     // printf("debug: make_unop called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= unop_node;
@@ -64,10 +61,12 @@ tree *make_unop (char *nt, char o, tree *c) {
     result->body.un_op.child = c;
     if (o == '-') {
         result->val = -(c->val);
+        result->temp_var_idx = add_temp(s, result->val);
         sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
     }
     else {
         result->val = c->val;
+        result->temp_var_idx = c->temp_var_idx;
         if (o == '.')
             sprintf(result->code, "[%s.val=%.2f%s]", nt, result->val, c->code);
         else
@@ -81,27 +80,32 @@ tree *make_number (char *nt, float n) {
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= number_node;
     result->val = result->body.num_lexeme = n;
+    result->temp_var_idx = -1;
     sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
     return result;
 }
 
-void deleteTree (tree *t) {
-    // printf("debug: deleteTree called\n");
+void delete_tree (tree *t) {
+    // printf("debug: delete_tree called\n");
     if (t) {
         switch (t->nodetype) {
             case stmt_node:
-                deleteTree (t->body.stmt.expr);
+                delete_tree (t->body.stmt.expr);
                 break;
             case binop_node:
-                deleteTree (t->body.bin_op.left);
-                deleteTree (t->body.bin_op.right);
+                delete_tree (t->body.bin_op.left);
+                delete_tree (t->body.bin_op.right);
                 break;
             case unop_node:
-                deleteTree (t->body.un_op.child);
+                delete_tree (t->body.un_op.child);
                 break;
             case number_node:
                 break;
         }
         free(t);
     }
+}
+
+void print_tree (tree *t) {
+    fprintf(syntreefptr, "%s\n", t->code);
 }
