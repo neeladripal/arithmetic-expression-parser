@@ -41,6 +41,7 @@ int add_id (symtab *s, char *id, float v, int l) {
     int idx = find_id(s, id);
     if (idx != -1) {
         s->idStore.arr[idx].val = v;
+        s->idStore.arr[idx].lno = l;
         // printf("debug: id%d - %s - %.2f updated\n", idx, id, v);
     } else {
         idx = s->idStore.count;
