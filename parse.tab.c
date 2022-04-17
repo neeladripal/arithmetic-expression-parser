@@ -71,12 +71,13 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include "syntree.h"
+
     int yylex(void);
     int yyerror(char *);
-    FILE *fptr;
     int flag = 1;
+    symtab st;
 
-#line 80 "parse.tab.c"
+#line 81 "parse.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -133,13 +134,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "parse.y"
+#line 14 "parse.y"
 
     float num;
     char *id;
     struct tree *s_tree;
 
-#line 143 "parse.tab.c"
+#line 144 "parse.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -514,8 +515,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    24,    24,    25,    27,    29,    30,    31,    33,    34,
-      35,    37,    38,    39
+       0,    25,    25,    26,    28,    30,    31,    32,    34,    35,
+      36,    38,    39,    40
 };
 #endif
 
@@ -1314,73 +1315,73 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 24 "parse.y"
-                    {deleteTree((yyvsp[-1].s_tree));}
-#line 1320 "parse.tab.c"
+#line 25 "parse.y"
+                    {delete_tree((yyvsp[-1].s_tree)); init_tempStore(&st);}
+#line 1321 "parse.tab.c"
     break;
 
   case 4:
-#line 27 "parse.y"
-                    {(yyval.s_tree) = make_stmt("S", (yyvsp[-3].id), (yyvsp[-1].s_tree));generate3ADC((yyval.s_tree)); free((yyvsp[-3].id)); fprintf(fptr, "%s\n", (yyval.s_tree)->code);}
-#line 1326 "parse.tab.c"
+#line 28 "parse.y"
+                    {(yyval.s_tree) = make_stmt(&st, "S", (yyvsp[-3].id), (yyvsp[-1].s_tree)); createSynTree((yyval.s_tree)); print_symtab(&st);}
+#line 1327 "parse.tab.c"
     break;
 
   case 5:
-#line 29 "parse.y"
-                    {(yyval.s_tree) = make_binop("E", (yyvsp[-2].s_tree), '+', (yyvsp[0].s_tree), &flag);}
-#line 1332 "parse.tab.c"
+#line 30 "parse.y"
+                    {(yyval.s_tree) = make_binop(&st, "E", (yyvsp[-2].s_tree), '+', (yyvsp[0].s_tree), &flag);}
+#line 1333 "parse.tab.c"
     break;
 
   case 6:
-#line 30 "parse.y"
-                    {(yyval.s_tree) = make_binop("E", (yyvsp[-2].s_tree), '-', (yyvsp[0].s_tree), &flag);}
-#line 1338 "parse.tab.c"
+#line 31 "parse.y"
+                    {(yyval.s_tree) = make_binop(&st, "E", (yyvsp[-2].s_tree), '-', (yyvsp[0].s_tree), &flag);}
+#line 1339 "parse.tab.c"
     break;
 
   case 7:
-#line 31 "parse.y"
-                    {(yyval.s_tree) = make_unop("E", '.', (yyvsp[0].s_tree));}
-#line 1344 "parse.tab.c"
+#line 32 "parse.y"
+                    {(yyval.s_tree) = make_unop(&st, "E", '.', (yyvsp[0].s_tree));}
+#line 1345 "parse.tab.c"
     break;
 
   case 8:
-#line 33 "parse.y"
-                    {(yyval.s_tree) = make_binop("T", (yyvsp[-2].s_tree), '*', (yyvsp[0].s_tree), &flag);}
-#line 1350 "parse.tab.c"
+#line 34 "parse.y"
+                    {(yyval.s_tree) = make_binop(&st, "T", (yyvsp[-2].s_tree), '*', (yyvsp[0].s_tree), &flag);}
+#line 1351 "parse.tab.c"
     break;
 
   case 9:
-#line 34 "parse.y"
-                    {(yyval.s_tree) = make_binop("T", (yyvsp[-2].s_tree), '/', (yyvsp[0].s_tree), &flag); if(flag == 0) yyerror("divide by zero");}
-#line 1356 "parse.tab.c"
+#line 35 "parse.y"
+                    {(yyval.s_tree) = make_binop(&st, "T", (yyvsp[-2].s_tree), '/', (yyvsp[0].s_tree), &flag); if(flag == 0) yyerror("divide by zero");}
+#line 1357 "parse.tab.c"
     break;
 
   case 10:
-#line 35 "parse.y"
-                    {(yyval.s_tree) = make_unop("T", '.', (yyvsp[0].s_tree));}
-#line 1362 "parse.tab.c"
+#line 36 "parse.y"
+                    {(yyval.s_tree) = make_unop(&st, "T", '.', (yyvsp[0].s_tree));}
+#line 1363 "parse.tab.c"
     break;
 
   case 11:
-#line 37 "parse.y"
-                    {(yyval.s_tree) = make_unop("F", 'b', (yyvsp[-1].s_tree));}
-#line 1368 "parse.tab.c"
+#line 38 "parse.y"
+                    {(yyval.s_tree) = make_unop(&st, "F", 'b', (yyvsp[-1].s_tree));}
+#line 1369 "parse.tab.c"
     break;
 
   case 12:
-#line 38 "parse.y"
-                    {(yyval.s_tree) = make_unop("F", '-', (yyvsp[0].s_tree));}
-#line 1374 "parse.tab.c"
+#line 39 "parse.y"
+                    {(yyval.s_tree) = make_unop(&st, "F", '-', (yyvsp[0].s_tree));}
+#line 1375 "parse.tab.c"
     break;
 
   case 13:
-#line 39 "parse.y"
+#line 40 "parse.y"
                     {(yyval.s_tree) = make_number("F", (yyvsp[0].num));}
-#line 1380 "parse.tab.c"
+#line 1381 "parse.tab.c"
     break;
 
 
-#line 1384 "parse.tab.c"
+#line 1385 "parse.tab.c"
 
       default: break;
     }
@@ -1612,7 +1613,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 41 "parse.y"
+#line 42 "parse.y"
 
 
 int yyerror(char *s) {
@@ -1621,17 +1622,27 @@ int yyerror(char *s) {
 }
 
 int main() {
-    fptr = fopen ("output.txt", "w");
-    if(fptr == NULL) {
-        printf("Error!");   
+    init_symtab(&st);
+    symtabfptr = fopen ("symtab.txt", "w");
+    if(symtabfptr == NULL) {
+        printf("Error writing symbol table!");   
         exit(1);             
     }
-    initMap();
-    remove("threeAddressCode.txt");
+    remove("output.txt");
+    // syntreefptr = fopen ("syntree.txt", "w");
+    // if(syntreefptr == NULL) {
+    //     printf("Error writing syntax tree!");   
+    //     exit(1);             
+    // }
+    tacfptr = fopen ("tac.txt", "w");
+    if(tacfptr == NULL) {
+        printf("Error writing three address code!");   
+        exit(1);             
+    }
     yyparse();
-    fclose(fptr);
-    
-     printSymtab(); 
-     deleteSymtab();
+    delete_idStore(&st);
+    fclose(symtabfptr);
+    // fclose(syntreefptr);
+    fclose(tacfptr);
     return 0;
 }
