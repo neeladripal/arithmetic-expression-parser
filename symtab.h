@@ -9,6 +9,7 @@ FILE* symtabfptr;
 typedef struct {
     char *name;
     float val;
+    int lno;
 } id_val;
 
 typedef struct {
@@ -36,7 +37,7 @@ int find_id (symtab *s, char *id) {
     return -1;
 }
 
-int add_id (symtab *s, char *id, float v) {
+int add_id (symtab *s, char *id, float v, int l) {
     int idx = find_id(s, id);
     if (idx != -1) {
         s->idStore.arr[idx].val = v;
@@ -46,7 +47,7 @@ int add_id (symtab *s, char *id, float v) {
         if (idx > MAX_SYM)
             return -1;
         else {
-            id_val newId = {.name = id, .val = v};
+            id_val newId = {.name = id, .val = v, .lno = l};
             s->idStore.arr[idx] = newId;
         }
         s->idStore.count += 1;
@@ -73,10 +74,10 @@ void init_symtab (symtab *s) {
 }
 
 void print_symtab (symtab *s) {
-    fprintf(symtabfptr, "%-10s%10s\n", "Symbol", "Value");
+    fprintf(symtabfptr, "%-10s%10s%10s\n", "Symbol", "Value", "Line No.");
     int c1 = s->idStore.count, c2 = s->tempStore.count;
     for (int i = 0; i < c1; i++) {
-        fprintf(symtabfptr, "%-10s%10.2f\n", s->idStore.arr[i].name, s->idStore.arr[i].val);
+        fprintf(symtabfptr, "%-10s%10.2f%10d\n", s->idStore.arr[i].name, s->idStore.arr[i].val, s->idStore.arr[i].lno);
     }
     for (int i = 0; i < c2; i++) {
         char t_name[3];

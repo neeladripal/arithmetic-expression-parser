@@ -27,12 +27,12 @@ void tac_stmt (char *id, tree *e) {
         fprintf(tacfptr, "%s = t%d\n", id, e->temp_var_idx);
 }
 
-tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
+tree *make_stmt (symtab *s, char *nt, char *id, tree *e, int l) {
     // printf("debug: make_stmt called\n");
     tree *result= (tree*) malloc (sizeof(tree));
     result->nodetype= stmt_node;
     result->body.stmt.id = id;
-    add_id(s, id, e->val);
+    add_id(s, id, e->val, l);
     result->body.stmt.expr= e;
     sprintf(result->tstr, "[%s[id.lexeme=%s][=]%s[;]]", nt, id, e->tstr);
     tac_stmt(id, e);

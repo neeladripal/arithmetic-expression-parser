@@ -7,6 +7,7 @@
     int yyerror(char *);
     int flag = 1;
     symtab st;
+    int lineno = 1;
 %}
 
 
@@ -22,17 +23,23 @@
 
 
 %%
-L:  L S '\n'        {delete_tree($2); init_tempStore(&st);}
+L:  L S '\n'        {delete_tree($2); init_tempStore(&st); lineno++;}
     |
     ;
-S:  ID '=' E ';'    {$$ = make_stmt(&st, "S", $1, $3); print_tree($$); print_symtab(&st);}
+S:  ID '=' E ';'    {$$ = make_stmt(&st, "S", $1, $3, lineno); print_tree($$); print_symtab(&st);}
     ;         
 E:  E '+' T         {$$ = make_binop(&st, "E", $1, '+', $3, &flag);}
     | E '-' T       {$$ = make_binop(&st, "E", $1, '-', $3, &flag);}
     | T             {$$ = make_unop(&st, "E", '.', $1);}
     ;
 T:  T '*' F         {$$ = make_binop(&st, "T", $1, '*', $3, &flag);}
-    | T '/' F       {$$ = make_binop(&st, "T", $1, '/', $3, &flag); if(flag == 0) yyerror("divide by zero");}
+    | T '/' F       {$$ = make_binop(&st, "T", $1, '/', $3, &flag);
+                        if(flag == 0) {
+                            char err[50];
+                            sprintf(err, "Error on line %d: divide by zero", lineno);
+                            yyerror(err);
+                        }
+                    }
     | F             {$$ = make_unop(&st, "T", '.', $1);}
     ;
 F:  '(' E ')'       {$$ = make_unop(&st, "F", 'b', $2);}
