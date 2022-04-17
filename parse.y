@@ -1,7 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "syntree.h"
+    #include "parsetree.h"
 
     int yylex(void);
     int yyerror(char *);
@@ -53,9 +53,9 @@ int main() {
         printf("Error writing symbol table!");   
         exit(1);             
     }
-    syntreefptr = fopen ("syntree.txt", "w");
+    syntreefptr = fopen ("parsetree.txt", "w");
     if(syntreefptr == NULL) {
-        printf("Error writing syntax tree!");   
+        printf("Error writing parse tree!");   
         exit(1);             
     }
     tacfptr = fopen ("tac.txt", "w");

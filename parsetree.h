@@ -16,7 +16,7 @@ typedef struct tree {
         float num_lexeme;
     } body;
     float val;
-    char code[1024];
+    char tstr[1024];
     int temp_var_idx;
 } tree;
 
@@ -34,7 +34,7 @@ tree *make_stmt (symtab *s, char *nt, char *id, tree *e) {
     result->body.stmt.id = id;
     add_id(s, id, e->val);
     result->body.stmt.expr= e;
-    sprintf(result->code, "[%s[id.lexval=%s][=]%s[;]]", nt, id, e->code);
+    sprintf(result->tstr, "[%s[id.lexeme=%s][=]%s[;]]", nt, id, e->tstr);
     tac_stmt(id, e);
     return result;
 }
@@ -73,7 +73,7 @@ tree *make_binop (symtab *s, char *nt, tree *l, char o, tree *r, int *flag) {
             result->val = l->val / r->val; break;
     }
     result->temp_var_idx = add_temp(s, result->val);
-    sprintf(result->code, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->code, o, r->code);
+    sprintf(result->tstr, "[%s.val=%.2f%s[%c]%s]", nt, result->val, l->tstr, o, r->tstr);
     tac_binop(result, o, l, r);
     return result;
 }
@@ -87,16 +87,16 @@ tree *make_unop (symtab *s, char *nt, char o, tree *c) {
     if (o == '-') {
         result->val = -(c->val);
         result->temp_var_idx = add_temp(s, result->val);
-        sprintf(result->code, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->code);
+        sprintf(result->tstr, "[%s.val=%.2f[%c]%s]", nt, result->val, o, c->tstr);
         tac_unop(result, o, c);
     }
     else {
         result->val = c->val;
         result->temp_var_idx = c->temp_var_idx;
         if (o == '.')
-            sprintf(result->code, "[%s.val=%.2f%s]", nt, result->val, c->code);
+            sprintf(result->tstr, "[%s.val=%.2f%s]", nt, result->val, c->tstr);
         else
-            sprintf(result->code, "[%s.val=%.2f[(]%s[)]]", nt, result->val, c->code);
+            sprintf(result->tstr, "[%s.val=%.2f[(]%s[)]]", nt, result->val, c->tstr);
     }
     return result;
 }
@@ -107,7 +107,7 @@ tree *make_number (char *nt, float n) {
     result->nodetype= number_node;
     result->val = result->body.num_lexeme = n;
     result->temp_var_idx = -1;
-    sprintf(result->code, "[%s.val=%.2f num.lexval=%.2f]", nt, n, n);
+    sprintf(result->tstr, "[%s.val=%.2f num.lexeme=%.2f]", nt, n, n);
     return result;
 }
 
@@ -133,5 +133,5 @@ void delete_tree (tree *t) {
 }
 
 void print_tree (tree *t) {
-    fprintf(syntreefptr, "%s\n", t->code);
+    fprintf(syntreefptr, "%s\n", t->tstr);
 }
