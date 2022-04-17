@@ -33,13 +33,7 @@ E:  E '+' T         {$$ = make_binop(&st, "E", $1, '+', $3, &flag);}
     | T             {$$ = make_unop(&st, "E", '.', $1);}
     ;
 T:  T '*' F         {$$ = make_binop(&st, "T", $1, '*', $3, &flag);}
-    | T '/' F       {$$ = make_binop(&st, "T", $1, '/', $3, &flag);
-                        if(flag == 0) {
-                            char err[50];
-                            sprintf(err, "Error on line %d: divide by zero", lineno);
-                            yyerror(err);
-                        }
-                    }
+    | T '/' F       {$$ = make_binop(&st, "T", $1, '/', $3, &flag); if (flag == 0) {yyerror("Divide by zero");}}
     | F             {$$ = make_unop(&st, "T", '.', $1);}
     ;
 F:  '(' E ')'       {$$ = make_unop(&st, "F", 'b', $2);}
@@ -49,7 +43,7 @@ F:  '(' E ')'       {$$ = make_unop(&st, "F", 'b', $2);}
 %%
 
 int yyerror(char *s) {
-    fprintf(stderr, "%s\n", s);
+    fprintf(stderr, "Error on line %d: %s\n", lineno, s);
     return 0;
 }
 
