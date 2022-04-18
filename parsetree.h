@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symtab.h"
+#include "symtab1.h"
 
 FILE *syntreefptr, *tacfptr;
 
